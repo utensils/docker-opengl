@@ -46,7 +46,7 @@ docker run jamesbrink/opengl:demos glxgears -info
 Running glxgears with OpenSWR
 
 ```shell
-docker run jamesbrink/opengl:demos -e GALLIUM_DRIVER=swr glxgears -info
+docker run -e GALLIUM_DRIVER=swr jamesbrink/opengl:demos glxgears -info
 ```
 
 ## Environment Variables
