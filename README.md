@@ -32,7 +32,7 @@ I build this image primarily to extnend from for other projects, but below are s
 Extending from this image. 
 
 ```Dockerfile
-FROM jamesbrink/php:7.2
+FROM jamesbrink/opengl:18.0.1
 COPY ./MyAppOpenGLApp /AnywhereMyHeartDesires
 RUN apk add --update my-deps...
 ```
