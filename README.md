@@ -10,10 +10,10 @@ Minimal Docker container bundled with the Mesa 3D Gallium Drivers: [LLVMpipe][me
 
 ## Features
 
-* Alpine Linux 3.7
-* LLVMpipe Driver (Mesa 18.0.1)
-* OpenSWR Driver (Mesa 18.0.1)
-* OSMesa Interface (Mesa 18.0.1)
+* Alpine Linux 3.10
+* LLVMpipe Driver (Mesa 19.0.8)
+* OpenSWR Driver (Mesa 19.0.8)
+* OSMesa Interface (Mesa 19.0.8)
 * softpipe - Reference Gallium software driver
 * swrast - Legacy Mesa software rasterizer
 * Xvfb - X Virtual Frame Buffer
@@ -25,6 +25,16 @@ Minimal Docker container bundled with the Mesa 3D Gallium Drivers: [LLVMpipe][me
 | `jamesbrink/opengl`       | Minimal image, good to extend `FROM`                                    |
 | `jamesbrink/opengl:demos` | Same image with added mesa3d demos such as `glxinfo`, `glxgears`, etc.. |
 
+
+## Building
+
+This image can be built using the supplied Makefile
+
+```shell
+make
+```
+
+
 ## Usage
 
 I build this image primarily to extnend from for other projects, but below are some simple examples. This image is already loaded with a trivial entrypoint script.  
@@ -32,7 +42,7 @@ I build this image primarily to extnend from for other projects, but below are s
 Extending from this image. 
 
 ```Dockerfile
-FROM jamesbrink/opengl:18.0.1
+FROM jamesbrink/opengl:19.0.8
 COPY ./MyAppOpenGLApp /AnywhereMyHeartDesires
 RUN apk add --update my-deps...
 ```

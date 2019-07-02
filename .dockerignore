@@ -1,7 +1,8 @@
 .git
 .gitignore
 .travis.yml
-README.md
-LICENSE
-hooks
 Dockerfile
+hooks
+LICENSE
+README.md
+temp

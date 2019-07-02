@@ -1,67 +1,96 @@
 # Mesa3D Software Drivers
-#
-# VERSION 18.0.1
 
-FROM alpine:3.7
+FROM alpine:3.10 as builder
 
-# Build arguments.
-ARG VCS_REF
-ARG BUILD_DATE
-ARG MESA_DEMOS="false"
-
-# Labels / Metadata.
-LABEL maintainer="James Brink, brink.james@gmail.com" \
-      decription="Mesa3D Software Drivers" \
-      version="18.0.1" \
-      org.label-schema.name="Mesa3D-Software-Drivers" \
-      org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url="https://github.com/jamesbrink/docker-gource" \
-      org.label-schema.schema-version="1.0.0-rc1"
-
-# Install all needed deps and compile the mesa llvmpipe driver from source.
+# Install all needed build deps for Mesa
 RUN set -xe; \
-    apk --update add --no-cache --virtual .runtime-deps xvfb llvm5-libs xdpyinfo; \
-    apk add --no-cache --virtual .build-deps llvm-dev build-base zlib-dev glproto xorg-server-dev python-dev; \
+    apk add --no-cache --virtual .build-deps \
+        autoconf \
+        automake \
+        bison \
+        build-base \
+        expat-dev \
+        flex \
+        gettext \
+        git \
+        glproto \
+        libtool \
+        llvm7 \
+        llvm7-dev \
+        py-mako \
+        xorg-server-dev python-dev \
+        zlib-dev;
+
+# Clone Mesa source repo. (this step caches)
+# Due to ongoing packaging issues we build from git vs tar packages
+# Refer to https://bugs.freedesktop.org/show_bug.cgi?id=107865 
+RUN set -xe; \
     mkdir -p /var/tmp/build; \
     cd /var/tmp/build; \
-    wget "https://mesa.freedesktop.org/archive/mesa-18.0.1.tar.gz"; \
-    tar xfv mesa-18.0.1.tar.gz; \
-    rm mesa-18.0.1.tar.gz; \
-    cd mesa-18.0.1; \
-    ./configure --enable-glx=gallium-xlib --with-gallium-drivers=swrast,swr --disable-dri --disable-gbm --disable-egl --enable-gallium-osmesa --prefix=/usr/local; \
-    make; \
-    make install; \
-    cd .. ; \
-    rm -rf mesa-18.0.1; \
-    if [ "${MESA_DEMOS}" == "true" ]; then \
-        apk add --no-cache --virtual .mesa-demos-runtime-deps glu glew \
-        && apk add --no-cache --virtual .mesa-demos-build-deps glew-dev freeglut-dev \
-        && wget "ftp://ftp.freedesktop.org/pub/mesa/demos/mesa-demos-8.4.0.tar.gz" \
-        && tar xfv mesa-demos-8.4.0.tar.gz \
-        && rm mesa-demos-8.4.0.tar.gz \
-        && cd mesa-demos-8.4.0 \
-        && ./configure --prefix=/usr/local \
-        && make \
-        && make install \
-        && cd .. \
-        && rm -rf mesa-demos-8.4.0 \
-        && apk del .mesa-demos-build-deps; \
-    fi; \
-    apk del .build-deps;
+    git clone https://gitlab.freedesktop.org/mesa/mesa.git;
+
+# Build Mesa from source.
+ARG MESA_VERSION
+RUN set -xe; \
+    cd /var/tmp/build/mesa; \
+    git checkout mesa-${MESA_VERSION}; \
+    libtoolize; \
+    autoreconf --install; \
+    ./configure \
+        --enable-glx=gallium-xlib \
+        --with-gallium-drivers=swrast,swr \
+        --disable-dri \
+        --disable-gbm \
+        --disable-egl \
+        --enable-gallium-osmesa \
+        --enable-autotools \
+        --enable-llvm \
+        --with-llvm-prefix=/usr/lib/llvm7/ \
+        --prefix=/usr/local; \
+    make -j$(getconf _NPROCESSORS_ONLN); \
+    make install;
 
 # Copy our entrypoint into the container.
 COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
 
+# Create fresh image from alpine
+FROM alpine:3.10
+
+# Install runtime dependencies for Mesa
+RUN set -xe; \
+    apk --update add --no-cache --virtual .runtime-deps \
+        expat \
+        llvm7-libs \
+        xdpyinfo \
+        xvfb;
+
+# Copy the Mesa build & entrypoint script from previous stage
+COPY --from=builder /usr/local /usr/local
+
+# Labels / Metadata.
+ARG VCS_REF
+ARG BUILD_DATE
+ARG MESA_DEMOS
+ARG MESA_VERSION
+LABEL maintainer="James Brink, brink.james@gmail.com" \
+      org.label-schema.decription="Mesa3D Software Drivers" \
+      org.label-schema.version="${MESA_VERSION}" \
+      org.label-schema.name="Mesa3D-Software-Drivers" \
+      org.label-schema.build-date="${BUILD_DATE}" \
+      org.label-schema.vcs-ref="${VCS_REF}" \
+      org.label-schema.vcs-url="https://github.com/utensils/docker-opengl" \
+      org.label-schema.schema-version="1.0.0-rc1"
+
 # Setup our environment variables.
-ENV XVFB_WHD="1920x1080x24"\
-    DISPLAY=":99" \
-    LIBGL_ALWAYS_SOFTWARE="1" \
+ENV DISPLAY=":99" \
     GALLIUM_DRIVER="llvmpipe" \
-    LP_NO_RAST="false" \
+    LIBGL_ALWAYS_SOFTWARE="1" \
     LP_DEBUG="" \
+    LP_NO_RAST="false" \
+    LP_NUM_THREADS="" \
     LP_PERF="" \
-    LP_NUM_THREADS=""
+    MESA_VERSION="${MESA_VERSION}" \
+    XVFB_WHD="1920x1080x24"
 
 # Set the default command.
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
