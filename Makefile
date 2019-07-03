@@ -15,7 +15,7 @@ STABLE_TAG              := 19.0.8
 .PHONY: default
 default: 19.0.8 tag-latest
 
-.PHONY: all tag-latest
+.PHONY: all tag-latest tag-stable
 all: $(RELEASES)
 
 # Build base images for all releases.
