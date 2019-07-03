@@ -40,4 +40,19 @@ tag-latest:
 tag-stable:
 	docker tag $(DOCKER_NAMESPACE)/$(IMAGE_NAME):$(STABLE_TAG) $(DOCKER_NAMESPACE)/$(IMAGE_NAME):stable
 	
+# Push all images.
+.PHONY: push
+push:
+	# Push all defined images
+	for release in $(RELEASES); \
+	do \
+		docker push $(DOCKER_NAMESPACE)/$(IMAGE_NAME):$${release}; \
+		docker push $(DOCKER_NAMESPACE)/$(IMAGE_NAME):$${release}-$(VCS_REF); \
+		docker push $(DOCKER_NAMESPACE)/$(IMAGE_NAME):$${release}-$(VERSION); \
+	done
 
+	# Push latest tag
+	docker push $(DOCKER_NAMESPACE)/$(IMAGE_NAME):latest
+
+	# Push stable tag
+	docker push $(DOCKER_NAMESPACE)/$(IMAGE_NAME):stable
