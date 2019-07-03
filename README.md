@@ -1,6 +1,6 @@
 # Docker - Mesa 3D OpenGL Software Rendering (Gallium) - LLVMpipe, and OpenSWR Drivers
 
-[![Build Status](https://travis-ci.org/utensils/docker-opengl.svg?branch=master)](https://travis-ci.org/utensils/docker-opengl) [![Docker Automated build](https://img.shields.io/docker/automated/utensilsunion/opengl.svg)](https://hub.docker.com/r/utensilsunion/opengl/) [![Docker Pulls](https://img.shields.io/docker/pulls/utensilsunion/opengl.svg)](https://hub.docker.com/r/utensilsunion/opengl/) [![Docker Stars](https://img.shields.io/docker/stars/utensilsunion/opengl.svg)](https://hub.docker.com/r/utensilsunion/opengl/) [![](https://images.microbadger.com/badges/image/utensilsunion/opengl.svg)](https://microbadger.com/images/utensilsunion/opengl "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/utensilsunion/opengl.svg)](https://microbadger.com/images/utensilsunion/opengl "Get your own version badge on microbadger.com")
+[![Build Status](https://travis-ci.org/utensils/docker-opengl.svg?branch=master)](https://travis-ci.org/utensils/docker-opengl) [![Docker Automated build](https://img.shields.io/docker/automated/utensils/opengl.svg)](https://hub.docker.com/r/utensils/opengl/) [![Docker Pulls](https://img.shields.io/docker/pulls/utensils/opengl.svg)](https://hub.docker.com/r/utensils/opengl/) [![Docker Stars](https://img.shields.io/docker/stars/utensils/opengl.svg)](https://hub.docker.com/r/utensils/opengl/) [![](https://images.microbadger.com/badges/image/utensils/opengl.svg)](https://microbadger.com/images/utensils/opengl "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/utensils/opengl.svg)](https://microbadger.com/images/utensils/opengl "Get your own version badge on microbadger.com")
 
 ## About
 
@@ -20,10 +20,10 @@ Minimal Docker container bundled with the Mesa 3D Gallium Drivers: [LLVMpipe][me
 
 | Image                         | Description             |
 | ----------------------------- | ----------------------- |
-| `utensilsunion/opengl`        | Latest Mesa version     |
-| `utensilsunion/opengl:19.0.8` | Mesa version **19.0.8** |
-| `utensilsunion/opengl:18.3.6` | Mesa version **18.3.6** |
-| `utensilsunion/opengl:18.2.8` | Mesa version **18.2.8** |
+| `utensils/opengl`        | Latest Mesa version     |
+| `utensils/opengl:19.0.8` | Mesa version **19.0.8** |
+| `utensils/opengl:18.3.6` | Mesa version **18.3.6** |
+| `utensils/opengl:18.2.8` | Mesa version **18.2.8** |
 
 ## Building
 
@@ -40,7 +40,7 @@ I build this image primarily to extnend from for other projects, but below are s
 Extending from this image.
 
 ```Dockerfile
-FROM utensilsunion/opengl:19.0.8
+FROM utensils/opengl:19.0.8
 COPY ./MyAppOpenGLApp /AnywhereMyHeartDesires
 RUN apk add --update my-deps...
 ```
@@ -48,13 +48,13 @@ RUN apk add --update my-deps...
 Running a simple glxgears test.
 
 ```shell
-docker run utensilsunion/opengl:demos glxgears -info
+docker run utensils/opengl:demos glxgears -info
 ```
 
 Running glxgears with OpenSWR
 
 ```shell
-docker run -e GALLIUM_DRIVER=swr utensilsunion/opengl:demos glxgears -info
+docker run -e GALLIUM_DRIVER=swr utensils/opengl:demos glxgears -info
 ```
 
 ## Environment Variables

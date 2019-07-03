@@ -1,7 +1,7 @@
 # !/usr/bin/make - f
 
 SHELL                   := /usr/bin/env bash
-DOCKER_NAMESPACE        ?= utensilsunion
+DOCKER_NAMESPACE        ?= utensils
 IMAGE_NAME              ?= opengl
 VERSION                 := $(shell git describe --tags --abbrev=0 2>/dev/null || git rev-parse --abbrev-ref HEAD)
 VCS_REF                 := $(shell git rev-parse --short HEAD)
