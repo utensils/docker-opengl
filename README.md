@@ -1,6 +1,6 @@
 # Docker - Mesa 3D OpenGL Software Rendering (Gallium) - LLVMpipe, and OpenSWR Drivers
 
-[![Build Status](https://travis-ci.org/utensils/docker-opengl.svg?branch=master)](https://travis-ci.org/utensils/docker-opengl) [![Docker Automated build](https://img.shields.io/docker/automated/utensils/opengl.svg)](https://hub.docker.com/r/utensils/opengl/) [![Docker Pulls](https://img.shields.io/docker/pulls/utensils/opengl.svg)](https://hub.docker.com/r/utensils/opengl/) [![Docker Stars](https://img.shields.io/docker/stars/utensils/opengl.svg)](https://hub.docker.com/r/utensils/opengl/) [![](https://images.microbadger.com/badges/image/utensils/opengl.svg)](https://microbadger.com/images/utensils/opengl "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/utensils/opengl.svg)](https://microbadger.com/images/utensils/opengl "Get your own version badge on microbadger.com")
+[![Docker Automated build](https://img.shields.io/docker/automated/utensils/opengl.svg)](https://hub.docker.com/r/utensils/opengl/) [![Docker Pulls](https://img.shields.io/docker/pulls/utensils/opengl.svg)](https://hub.docker.com/r/utensils/opengl/) [![Docker Stars](https://img.shields.io/docker/stars/utensils/opengl.svg)](https://hub.docker.com/r/utensils/opengl/) [![](https://images.microbadger.com/badges/image/utensils/opengl.svg)](https://microbadger.com/images/utensils/opengl "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/utensils/opengl.svg)](https://microbadger.com/images/utensils/opengl "Get your own version badge on microbadger.com")
 
 ## About
 
@@ -18,9 +18,10 @@ Minimal Docker container bundled with the Mesa 3D Gallium Drivers: [LLVMpipe][me
 
 ## Docker Images
 
-| Image                         | Description             |
-| ----------------------------- | ----------------------- |
-| `utensils/opengl`        | Latest Mesa version     |
+| Image                    | Description             |
+| ------------------------ | ----------------------- |
+| `utensils/opengl:latest` | Latest/Dev Mesa version |
+| `utensils/opengl:stable` | Stable Mesa version     |
 | `utensils/opengl:19.0.8` | Mesa version **19.0.8** |
 | `utensils/opengl:18.3.6` | Mesa version **18.3.6** |
 | `utensils/opengl:18.2.8` | Mesa version **18.2.8** |
