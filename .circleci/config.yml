@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: docker:17.05.0-ce-git
+      - image: docker:stable-git
     steps:
       - checkout
       - setup_remote_docker
@@ -21,3 +21,8 @@ jobs:
           name: List Docker Images
           command: |
             docker images --filter "label=org.label-schema.vendor=Utensils" --filter "dangling=false"
+      - run:
+          name: Push Docker Images
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
+            make push
