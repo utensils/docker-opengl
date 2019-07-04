@@ -4,7 +4,7 @@ FROM alpine:3.10 as builder
 
 # Install all needed build deps for Mesa
 RUN set -xe; \
-    apk add --no-cache --virtual .build-deps \
+    apk add --no-cache \
         autoconf \
         automake \
         bison \
@@ -58,7 +58,7 @@ FROM alpine:3.10
 
 # Install runtime dependencies for Mesa
 RUN set -xe; \
-    apk --update add --no-cache --virtual .runtime-deps \
+    apk --update add --no-cache \
         expat \
         llvm7-libs \
         xdpyinfo \

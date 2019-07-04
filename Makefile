@@ -15,6 +15,12 @@ STABLE_TAG              := 19.0.8
 .PHONY: default
 default: 19.0.8 tag-latest
 
+.PHONY: latest
+latest: $(LATEST_TAG) tag-latest
+
+.PHONY: stable
+stable: $(STABLE_TAG) tag-stable
+
 .PHONY: all
 all: $(RELEASES) tag-latest tag-stable
 
