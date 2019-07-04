@@ -1,10 +1,10 @@
 # Docker - Mesa 3D OpenGL Software Rendering (Gallium) - LLVMpipe, and OpenSWR Drivers
 
-[![CircleCI](https://circleci.com/gh/utensils/docker-opengl.svg?style=svg)](https://circleci.com/gh/utensils/docker-opengl)[![Docker Automated build](https://img.shields.io/docker/automated/utensils/opengl.svg)](https://hub.docker.com/r/utensils/opengl/) [![Docker Pulls](https://img.shields.io/docker/pulls/utensils/opengl.svg)](https://hub.docker.com/r/utensils/opengl/) [![Docker Stars](https://img.shields.io/docker/stars/utensils/opengl.svg)](https://hub.docker.com/r/utensils/opengl/) [![](https://images.microbadger.com/badges/image/utensils/opengl.svg)](https://microbadger.com/images/utensils/opengl "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/utensils/opengl.svg)](https://microbadger.com/images/utensils/opengl "Get your own version badge on microbadger.com")
+[![CircleCI](https://circleci.com/gh/utensils/docker-opengl.svg?style=svg)](https://circleci.com/gh/utensils/docker-opengl) [![Docker Automated build](https://img.shields.io/docker/automated/utensils/opengl.svg)](https://hub.docker.com/r/utensils/opengl/) [![Docker Pulls](https://img.shields.io/docker/pulls/utensils/opengl.svg)](https://hub.docker.com/r/utensils/opengl/) [![Docker Stars](https://img.shields.io/docker/stars/utensils/opengl.svg)](https://hub.docker.com/r/utensils/opengl/) [![](https://images.microbadger.com/badges/image/utensils/opengl.svg)](https://microbadger.com/images/utensils/opengl "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/utensils/opengl.svg)](https://microbadger.com/images/utensils/opengl "Get your own version badge on microbadger.com")
 
 ## About
 
-Minimal Docker container bundled with the Mesa 3D Gallium Drivers: [LLVMpipe][mesa-llvm] & [OpenSWR][openswr], enabling OpenGL support inside a Docker container without the need for a GPU.
+Minimal Docker container bundled with the Mesa 3D Gallium Drivers: [LLVMpipe][mesa-llvm] & [OpenSWR][openswr], enabling OpenGL support inside a Docker container **without the need for a GPU**.
 
 ## Features
 
@@ -28,10 +28,21 @@ Minimal Docker container bundled with the Mesa 3D Gallium Drivers: [LLVMpipe][me
 
 ## Building
 
-This image can be built using the supplied Makefile
+This image can be built using the supplied `Makefile`
 
+Make default image (latest):
 ```shell
 make
+```
+
+Make stable image:
+```shell
+make stable
+```
+
+Make all images:
+```shell
+make all
 ```
 
 ## Usage
