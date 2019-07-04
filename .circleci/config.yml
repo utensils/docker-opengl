@@ -1,0 +1,23 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: docker:17.05.0-ce-git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Install build dependencies
+          command: |
+            apk add --no-cache \
+              bash \
+              make \
+              git
+      - run:
+          name: Build Docker Images
+          command: |
+            make all
+      - run:
+          name: List Docker Images
+          command: |
+            docker images --filter "label=org.label-schema.vendor=Utensils" --filter "dangling=false"
