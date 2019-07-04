@@ -73,13 +73,14 @@ ARG BUILD_DATE
 ARG MESA_DEMOS
 ARG MESA_VERSION
 LABEL maintainer="James Brink, brink.james@gmail.com" \
-      org.label-schema.decription="Mesa3D Software Drivers" \
-      org.label-schema.version="${MESA_VERSION}" \
-      org.label-schema.name="Mesa3D-Software-Drivers" \
       org.label-schema.build-date="${BUILD_DATE}" \
+      org.label-schema.decription="Mesa3D Software Drivers" \
+      org.label-schema.name="Mesa3D-Software-Drivers" \
+      org.label-schema.schema-version="1.0.0-rc1" \
       org.label-schema.vcs-ref="${VCS_REF}" \
       org.label-schema.vcs-url="https://github.com/utensils/docker-opengl" \
-      org.label-schema.schema-version="1.0.0-rc1"
+      org.label-schema.vendor="Utensils" \
+      org.label-schema.version="${MESA_VERSION}"
 
 # Setup our environment variables.
 ENV DISPLAY=":99" \
