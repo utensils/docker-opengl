@@ -36,7 +36,7 @@ make
 
 ## Usage
 
-I build this image primarily to extnend from for other projects, but below are some simple examples. This image is already loaded with a trivial entrypoint script.
+This image is intended to be used as a base image to extend from. One good example of this is the [Envisaged][Envisaged] project which allows for quick and easy Gource visualizations from within a Docker container.
 
 Extending from this image.
 
@@ -46,19 +46,9 @@ COPY ./MyAppOpenGLApp /AnywhereMyHeartDesires
 RUN apk add --update my-deps...
 ```
 
-Running a simple glxgears test.
-
-```shell
-docker run utensils/opengl:demos glxgears -info
-```
-
-Running glxgears with OpenSWR
-
-```shell
-docker run -e GALLIUM_DRIVER=swr utensils/opengl:demos glxgears -info
-```
-
 ## Environment Variables
+
+The following environment variables are present to modify rendering options.
 
 ### High level settings
 
@@ -80,3 +70,4 @@ docker run -e GALLIUM_DRIVER=swr utensils/opengl:demos glxgears -info
 
 [openswr]: http://openswr.org/
 [mesa-llvm]: https://www.mesa3d.org/llvmpipe.html
+[Envisaged]: https://github.com/utensils/Envisaged
