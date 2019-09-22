@@ -17,7 +17,7 @@ else
 	"$@"
 	trap "echo 'Stopping'; kill -SIGTERM $Xvfb_pid" SIGINT SIGTERM
 	# Wait for process to end.
-	while kill -0 $Xvfb_pid > /dev/null 2>&1; do
-    	wait
-	done
+	kill $Xvfb_pid
+	echo "Waiting for Xvfb (PID: $Xvfb_pid) to shut down..."
+	wait $Xvfb_pid
 fi
