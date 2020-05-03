@@ -1,64 +1,67 @@
 # !/usr/bin/make - f
 
 SHELL                   := /usr/bin/env bash
-DOCKER_NAMESPACE        ?= utensils
+SED                     := $(shell [[ `command -v gsed` ]] && echo gsed || echo sed)
+REPO_API_URL            ?= https://hub.docker.com/v2
+REPO_NAMESPACE          ?= utensils
+REPO_USERNAME           ?= utensils
 IMAGE_NAME              ?= opengl
-VERSION                 := $(shell git describe --tags --abbrev=0 2>/dev/null || git rev-parse --abbrev-ref HEAD)
+BASE_IMAGE              ?= alpine:3.11
+LLVM_VERSION            ?= 9
+TAG_SUFFIX              ?= $(shell echo "-$(BASE_IMAGE)" | $(SED) 's|:|-|g' | $(SED) 's|/|_|g' 2>/dev/null )
 VCS_REF                 := $(shell git rev-parse --short HEAD)
 BUILD_DATE              := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
-ARCH                    := $(shell uname -m)
-RELEASES                := 18.2.8 18.3.6 19.0.8
-LATEST_TAG              := 19.0.8
-STABLE_TAG              := 19.0.8
+PLATFORMS               ?= linux/amd64,linux/386
+RELEASES                ?= latest stable 20.0.6 20.1.0-rc1
+STABLE                  ?= 20.0.6
 
 # Default target is to build all defined Mesa releases.
 .PHONY: default
-default: 19.0.8 tag-latest
+default: $(STABLE)
 
 .PHONY: latest
-latest: $(LATEST_TAG) tag-latest
+latest: $(LATEST)
 
 .PHONY: stable
-stable: $(STABLE_TAG) tag-stable
+stable: $(STABLE)
 
 .PHONY: all
-all: $(RELEASES) tag-latest tag-stable
+all: $(LATEST) $(STABLE) $(RELEASES) push-readme
 
-# Build base images for all releases.
+# Build base images for all releases using buildx.
 .PHONY: $(RELEASES)
+.SILENT: $(RELEASES)
 $(RELEASES):
-	docker build \
+	if [ "$(@)" == "stable" ]; \
+	then \
+		MESA_VERSION="$(STABLE)"; \
+	else \
+		MESA_VERSION="$(@)"; \
+	fi; \
+	docker buildx build \
+		--build-arg BASE_IMAGE=$(BASE_IMAGE) \
 		--build-arg BUILD_DATE=$(BUILD_DATE) \
+		--build-arg LLVM_VERSION=$(LLVM_VERSION) \
+		--build-arg MESA_VERSION="$$MESA_VERSION"  \
 		--build-arg VCS_REF=$(VCS_REF) \
-		--build-arg MESA_VERSION=$(@) \
-		--tag $(DOCKER_NAMESPACE)/$(IMAGE_NAME):$(@) \
-		--tag $(DOCKER_NAMESPACE)/$(IMAGE_NAME):$(@)-$(VCS_REF) \
-		--tag $(DOCKER_NAMESPACE)/$(IMAGE_NAME):$(@)-$(VERSION) \
-		--file Dockerfile .; \
-
-# Tag our latest release
-.PHONY: tag-latest
-tag-latest:
-	docker tag $(DOCKER_NAMESPACE)/$(IMAGE_NAME):$(LATEST_TAG) $(DOCKER_NAMESPACE)/$(IMAGE_NAME):latest
-
-# Tag our stable release
-.PHONY: tag-stable
-tag-stable:
-	docker tag $(DOCKER_NAMESPACE)/$(IMAGE_NAME):$(STABLE_TAG) $(DOCKER_NAMESPACE)/$(IMAGE_NAME):stable
+		--tag $(REPO_NAMESPACE)/$(IMAGE_NAME):$(@)$(TAG_SUFFIX) \
+		--tag $(REPO_NAMESPACE)/$(IMAGE_NAME):$(@) \
+		--platform $(PLATFORMS) \
+		--progress=auto \
+		--push \
+		--file Dockerfile .;
 	
-# Push all images.
-.PHONY: push
-push:
-	# Push all defined images
-	for release in $(RELEASES); \
-	do \
-		docker push $(DOCKER_NAMESPACE)/$(IMAGE_NAME):$${release}; \
-		docker push $(DOCKER_NAMESPACE)/$(IMAGE_NAME):$${release}-$(VCS_REF); \
-		docker push $(DOCKER_NAMESPACE)/$(IMAGE_NAME):$${release}-$(VERSION); \
-	done
-
-	# Push latest tag
-	docker push $(DOCKER_NAMESPACE)/$(IMAGE_NAME):latest
-
-	# Push stable tag
-	docker push $(DOCKER_NAMESPACE)/$(IMAGE_NAME):stable
+# Update README on DockerHub registry.
+.PHONY: push-readme
+.SILENT: push-readme
+push-readme:
+	echo "Authenticating to $(REPO_API_URL)"; \
+		token=$$(curl -s -X POST -H "Content-Type: application/json" -d '{"username": "$(REPO_USERNAME)", "password": "'"$$REPO_PASSWORD"'"}' $(REPO_API_URL)/users/login/ | jq -r .token); \
+		code=$$(jq -n --arg description "$$(<README.md)" '{"registry":"registry-1.docker.io","full_description": $$description }' | curl -s -o /dev/null  -L -w "%{http_code}" $(REPO_API_URL)/repositories/$(REPO_NAMESPACE)/$(IMAGE_NAME)/ -d @- -X PATCH -H "Content-Type: application/json" -H "Authorization: JWT $$token"); \
+		if [ "$$code" != "200" ]; \
+		then \
+			echo "Failed to update README.md"; \
+			exit 1; \
+		else \
+			echo "Success"; \
+		fi;

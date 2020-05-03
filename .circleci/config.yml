@@ -3,6 +3,8 @@ jobs:
   build:
     docker:
       - image: docker:stable-git
+    environment:
+      DOCKER_BUILDKIT: 1
     steps:
       - checkout
       - setup_remote_docker
@@ -16,13 +18,7 @@ jobs:
       - run:
           name: Build Docker Images
           command: |
-            make all
-      - run:
-          name: List Docker Images
-          command: |
-            docker images --filter "label=org.label-schema.vendor=Utensils" --filter "dangling=false"
-      - run:
-          name: Push Docker Images
-          command: |
             echo "$DOCKERHUB_PASS" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
-            make push
+            LLVM_VERSION=8 BASE_IMAGE='alpine:3.10' make all
+            LLVM_VERSION=10 BASE_IMAGE='alpine:edge' make all
+            LLVM_VERSION=9 BASE_IMAGE='alpine:3.11' make all

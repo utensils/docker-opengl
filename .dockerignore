@@ -1,6 +1,8 @@
 .git
 .gitignore
 .travis.yml
+.circleci
+Makefile
 Dockerfile
 hooks
 LICENSE

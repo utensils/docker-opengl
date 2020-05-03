@@ -8,36 +8,37 @@ Minimal Docker container bundled with the Mesa 3D Gallium Drivers: [LLVMpipe][me
 
 ## Features
 
-- Alpine Linux 3.10
-- LLVMpipe Driver (Mesa 19.0.8)
-- OpenSWR Driver (Mesa 19.0.8)
-- OSMesa Interface (Mesa 19.0.8)
+- Alpine Linux 3.11
+- LLVMpipe Driver (Mesa 20.0.6)
+- OpenSWR Driver (Mesa 20.0.6)
+- OSMesa Interface (Mesa 20.0.6)
 - softpipe - Reference Gallium software driver
 - swrast - Legacy Mesa software rasterizer
 - Xvfb - X Virtual Frame Buffer
 
 ## Docker Images
 
-| Image                    | Description             |
-| ------------------------ | ----------------------- |
-| `utensils/opengl:latest` | Latest/Dev Mesa version |
-| `utensils/opengl:stable` | Stable Mesa version     |
-| `utensils/opengl:19.0.8` | Mesa version **19.0.8** |
-| `utensils/opengl:18.3.6` | Mesa version **18.3.6** |
-| `utensils/opengl:18.2.8` | Mesa version **18.2.8** |
+| Image                    | Description             | Platforms              | Base Image  |
+| ------------------------ | ----------------------- | ---------------------- | ----------- |
+| `utensils/opengl:latest` | Latest/Dev Mesa version | linux/amd64, linux/386 | alpine:3.11 |
+| `utensils/opengl:stable` | Stable Mesa version     | linux/amd64, linux/386 | alpine:3.11 |
+| `utensils/opengl:20.0.6` | Mesa version **20.0.6** | linux/amd64, linux/386 | alpine:3.11 |
+| `utensils/opengl:19.0.8` | Mesa version **19.0.8** | linux/amd64            | alpine:3.10 |
+| `utensils/opengl:18.3.6` | Mesa version **18.3.6** | linux/amd64            | alpine:3.10 |
+| `utensils/opengl:18.2.8` | Mesa version **18.2.8** | linux/amd64            | alpine:3.10 |
 
 ## Building
 
-This image can be built using the supplied `Makefile`
+This image can be built locally using the supplied `Makefile`
 
-Make default image (latest):
+Make default image (stable):
 ```shell
 make
 ```
 
-Make stable image:
+Make latest image:
 ```shell
-make stable
+make latest
 ```
 
 Make all images:
@@ -52,7 +53,7 @@ This image is intended to be used as a base image to extend from. One good examp
 Extending from this image.
 
 ```Dockerfile
-FROM utensils/opengl:19.0.8
+FROM utensils/opengl:20.0.6
 COPY ./MyAppOpenGLApp /AnywhereMyHeartDesires
 RUN apk add --update my-deps...
 ```
