@@ -14,6 +14,7 @@ BUILD_DATE              := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 PLATFORMS               ?= linux/amd64,linux/386
 RELEASES                ?= latest stable 20.0.6 20.1.0-rc1
 STABLE                  ?= 20.0.6
+BUILD_OUTPUT            ?= auto
 
 # Default target is to build all defined Mesa releases.
 .PHONY: default
@@ -47,7 +48,7 @@ $(RELEASES):
 		--tag $(REPO_NAMESPACE)/$(IMAGE_NAME):$(@)$(TAG_SUFFIX) \
 		--tag $(REPO_NAMESPACE)/$(IMAGE_NAME):$(@) \
 		--platform $(PLATFORMS) \
-		--progress=auto \
+		--progress=$(BUILD_OUTPUT) \
 		--push \
 		--file Dockerfile .;
 	

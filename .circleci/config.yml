@@ -1,20 +1,32 @@
-version: 2
+version: 2.1
 jobs:
   build:
-    docker:
-      - image: docker:stable-git
+    machine:
+      image: 'ubuntu-1604:202004-01'
     environment:
+      DOCKER_CLI_EXPERIMENTAL: enabled
       DOCKER_BUILDKIT: 1
+      BUILD_OUTPUT: plain
     steps:
       - checkout
-      - setup_remote_docker
       - run:
-          name: Install build dependencies
+          name: Prepare Docker
           command: |
-            apk add --no-cache \
-              bash \
-              make \
-              git
+            sudo apt update
+            sudo apt install -y qemu qemu-user-static qemu-user binfmt-support
+            git clone https://github.com/computermouth/qemu-static-conf.git
+            sudo mkdir -p /lib/binfmt.d
+            sudo cp qemu-static-conf/*.conf /lib/binfmt.d/
+            sudo systemctl restart systemd-binfmt.service
+            sudo apt purge -y docker-ce docker-ce-cli
+            sudo curl -fsSL https://get.docker.com -o get-docker.sh
+            sudo sh get-docker.sh
+            sudo usermod -aG docker $(whoami)
+            mkdir $HOME/.docker
+            sh -c 'echo "{ \"experimental\": \"enabled\" }" >> $HOME/.docker/config.json'
+            docker buildx create --name=qemu
+            docker buildx inspect --bootstrap qemu
+            docker buildx use qemu
       - run:
           name: Build Docker Images
           command: |
