@@ -27,7 +27,7 @@ latest: $(LATEST)
 stable: $(STABLE)
 
 .PHONY: all
-all: $(LATEST) $(STABLE) $(RELEASES) push-readme
+all: $(LATEST) $(STABLE) $(RELEASES)
 
 # Build base images for all releases using buildx.
 .PHONY: $(RELEASES)
@@ -50,7 +50,7 @@ $(RELEASES):
 		--platform $(PLATFORMS) \
 		--progress=$(BUILD_OUTPUT) \
 		--push \
-		--file Dockerfile .;
+		--file Dockerfile .
 	
 # Update README on DockerHub registry.
 .PHONY: push-readme
