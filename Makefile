@@ -18,6 +18,7 @@ BUILD_PROGRESS          ?= auto
 BUILD_OUTPUT            ?= type=registry
 BUILD_TYPE              ?= release
 BUILD_OPTIMIZATION      ?= 3
+MICRO_BADGER_URL        ?=
 
 # Default target is to build all defined Mesa releases.
 .PHONY: default
@@ -35,6 +36,8 @@ all: $(LATEST) $(STABLE) $(RELEASES)
 # Build base images for all releases using buildx.
 .PHONY: $(RELEASES)
 .SILENT: $(RELEASES)
+export MICRO_BADGER_URL
+export BUILD_OUTPUT
 $(RELEASES):
 	if [ "$(@)" == "stable" ]; \
 	then \
@@ -56,6 +59,11 @@ $(RELEASES):
 		--progress=$(BUILD_PROGRESS) \
 		--output=$(BUILD_OUTPUT) \
 		--file Dockerfile .
+	if [ ! -z "$$MICRO_BADGER_URL" ] && [ "$$BUILD_OUTPUT" == "type=registry" ]; \
+	then \
+		ehco "Triggering MicroBadger WebHook"; \
+		curl -d "update" "$$MICRO_BADGER_URL"; \
+	fi
 	
 # Update README on DockerHub registry.
 .PHONY: push-readme
