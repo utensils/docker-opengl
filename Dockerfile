@@ -17,18 +17,35 @@ RUN set -xe; \
         gettext \
         git \
         glproto \
+        libdrm-dev \
         libtool \
+        libva-dev \
         libx11-dev \
+        libxcb-dev \
+        libxdamage-dev \
+        libxext-dev \
+        libxfixes-dev \
         libxrandr-dev \
+        libxshmfence-dev \
+        libxt-dev \
+        libxvmc-dev \
+        libxxf86vm-dev \
         llvm${LLVM_VERSION} \
         llvm${LLVM_VERSION}-dev \
+        makedepend \
         meson \
         py-mako \
+        py3-libxml2 \
+        py3-mako \
+        python3 \
         python3-dev \
+        talloc-dev \
         wayland-dev \
         wayland-protocols \
         xorg-server-dev \
-        zlib-dev;
+        xorgproto \
+        zlib-dev \
+        zstd-dev;
 
 # Clone Mesa source repo. (this step caches)
 # Due to ongoing packaging issues we build from git vs tar packages
@@ -45,21 +62,42 @@ RUN set -xe; \
     fi
 
 # Build Mesa from source.
+ARG BUILD_TYPE=release
+ARG BUILD_OPTIMIZATION=3
 RUN set -xe; \
     cd /var/tmp/build/mesa; \
     libtoolize; \
+    if [ "$(uname -m)" ==  "aarch64" ] || [ "$(uname -m)" == "armv7l" ]; \
+    then \
+        galium_drivers=swrast; \
+    else \
+        galium_drivers=swrast,swr; \
+    fi ;\
     meson \
-        --buildtype=plain \
+        --buildtype=${BUILD_TYPE} \
         --prefix=/usr/local \
+        --sysconfdir=/etc \
+        -D b_ndebug=true \
+        -D egl=true \
+        -D gallium-nine=false \
+        -D gallium-xvmc=false \
+        -D gbm=true \
+        -D gles1=false \
+        -D gles2=true \
+        -D opengl=true \
+        -D dri-drivers-path=/usr/local/lib/xorg/modules/dri \
         -D dri-drivers= \
+        -D dri3=true  \
         -D egl=false \
-        -D gallium-drivers=swrast,swr \
+        -D gallium-drivers="$galium_drivers" \
         -D gbm=false \
-        -D glx=gallium-xlib \
+        -D glx=dri \
         -D llvm=true \
         -D lmsensors=false \
-        -D osmesa=gallium \
+        -D optimization=${BUILD_OPTIMIZATION} \
+        -D osmesa=gallium  \
         -D platforms=drm,x11,wayland \
+        -D shared-glapi=true \
         -D shared-llvm=true \
         -D vulkan-drivers= \
         build/; \
@@ -74,18 +112,23 @@ COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
 ARG BASE_IMAGE=alpine:3.11
 FROM ${BASE_IMAGE}
 
-# Install runtime dependencies for Mesa
+# Copy the Mesa build & entrypoint script from previous stage
+COPY --from=builder /usr/local /usr/local
+
+# Install runtime dependencies for Mesa and link xorg dri modules
 ARG LLVM_VERSION=9
 RUN set -xe; \
     apk --update add --no-cache \
+        binutils \
         expat \
         llvm${LLVM_VERSION}-libs \
+        setxkbmap \
         xdpyinfo \
         xrandr \
-        xvfb;
-
-# Copy the Mesa build & entrypoint script from previous stage
-COPY --from=builder /usr/local /usr/local
+        xvfb \
+        xvfb-run \
+        zstd-libs; \
+    ln -sf /usr/local/lib/xorg/modules/dri/* /usr/lib/xorg/modules/dri/
 
 # Labels / Metadata.
 ARG VCS_REF
@@ -103,8 +146,10 @@ LABEL \
     org.opencontainers.image.version="${MESA_VERSION}"
 
 # Setup our environment variables.
-ENV DISPLAY=":99" \
+ENV \
+    DISPLAY=":99" \
     GALLIUM_DRIVER="llvmpipe" \
+    LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH" \
     LIBGL_ALWAYS_SOFTWARE="1" \
     LP_DEBUG="" \
     LP_NO_RAST="false" \
@@ -113,5 +158,6 @@ ENV DISPLAY=":99" \
     MESA_VERSION="${MESA_VERSION}" \
     XVFB_WHD="1920x1080x24"
 
-# Set the default command.
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+# Set the entrypoint script
+# ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT xvfb-run -e /dev/stderr xdpyinfo | cat

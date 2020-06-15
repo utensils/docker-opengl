@@ -11,10 +11,13 @@ LLVM_VERSION            ?= 9
 TAG_SUFFIX              ?= $(shell echo "-$(BASE_IMAGE)" | $(SED) 's|:|-|g' | $(SED) 's|/|_|g' 2>/dev/null )
 VCS_REF                 := $(shell git rev-parse --short HEAD)
 BUILD_DATE              := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
-PLATFORMS               ?= linux/amd64,linux/386
-RELEASES                ?= latest stable 20.0.6 20.1.0-rc1
+PLATFORMS               ?= linux/amd64,linux/386,linux/arm64
+RELEASES                ?= stable 20.0.6 20.1.0-rc1
 STABLE                  ?= 20.0.6
-BUILD_OUTPUT            ?= auto
+BUILD_PROGRESS          ?= auto
+BUILD_OUTPUT            ?= type=registry
+BUILD_TYPE              ?= release
+BUILD_OPTIMIZATION      ?= 3
 
 # Default target is to build all defined Mesa releases.
 .PHONY: default
@@ -42,14 +45,16 @@ $(RELEASES):
 	docker buildx build \
 		--build-arg BASE_IMAGE=$(BASE_IMAGE) \
 		--build-arg BUILD_DATE=$(BUILD_DATE) \
+		--build-arg BUILD_OPTIMIZATION=$(BUILD_OPTIMIZATION) \
+		--build-arg BUILD_TYPE=$(BUILD_TYPE) \
 		--build-arg LLVM_VERSION=$(LLVM_VERSION) \
 		--build-arg MESA_VERSION="$$MESA_VERSION"  \
 		--build-arg VCS_REF=$(VCS_REF) \
 		--tag $(REPO_NAMESPACE)/$(IMAGE_NAME):$(@)$(TAG_SUFFIX) \
 		--tag $(REPO_NAMESPACE)/$(IMAGE_NAME):$(@) \
-		--platform $(PLATFORMS) \
-		--progress=$(BUILD_OUTPUT) \
-		--push \
+		--platform=$(PLATFORMS) \
+		--progress=$(BUILD_PROGRESS) \
+		--output=$(BUILD_OUTPUT) \
 		--file Dockerfile .
 	
 # Update README on DockerHub registry.
