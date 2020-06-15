@@ -61,7 +61,7 @@ $(RELEASES):
 		--file Dockerfile .
 	if [ ! -z "$$MICRO_BADGER_URL" ] && [ "$$BUILD_OUTPUT" == "type=registry" ]; \
 	then \
-		ehco "Triggering MicroBadger WebHook"; \
+		echo "Triggering MicroBadger WebHook"; \
 		curl -d "update" "$$MICRO_BADGER_URL"; \
 	fi
 	
