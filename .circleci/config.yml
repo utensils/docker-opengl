@@ -6,7 +6,7 @@ jobs:
     environment:
       DOCKER_CLI_EXPERIMENTAL: enabled
       DOCKER_BUILDKIT: 1
-      BUILD_OUTPUT: plain
+      BUILD_PROGRESS: plain
     steps:
       - checkout
       - run:
