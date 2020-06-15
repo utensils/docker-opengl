@@ -1,6 +1,9 @@
 version: 2.1
 jobs:
   build:
+    branches:  
+      only:
+        - main
     machine:
       image: 'ubuntu-1604:202004-01'
     environment:
