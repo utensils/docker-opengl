@@ -6,13 +6,13 @@ REPO_API_URL            ?= https://hub.docker.com/v2
 REPO_NAMESPACE          ?= utensils
 REPO_USERNAME           ?= utensils
 IMAGE_NAME              ?= opengl
-BASE_IMAGE              ?= alpine:3.11
-LLVM_VERSION            ?= 9
+BASE_IMAGE              ?= alpine:3.12
+LLVM_VERSION            ?= 10
 TAG_SUFFIX              ?= $(shell echo "-$(BASE_IMAGE)" | $(SED) 's|:|-|g' | $(SED) 's|/|_|g' 2>/dev/null )
 VCS_REF                 := $(shell git rev-parse --short HEAD)
 BUILD_DATE              := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 PLATFORMS               ?= linux/amd64,linux/386,linux/arm64,linux/arm/v7
-RELEASES                ?= stable 20.0.6 20.1.0-rc1
+RELEASES                ?= stable 20.0.6 20.1.0-rc1 latest
 STABLE                  ?= 20.0.6
 BUILD_PROGRESS          ?= auto
 BUILD_OUTPUT            ?= type=registry
