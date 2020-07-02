@@ -159,5 +159,4 @@ ENV \
     XVFB_WHD="1920x1080x24"
 
 # Set the entrypoint script
-# ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-ENTRYPOINT xvfb-run -e /dev/stderr xdpyinfo | cat
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
