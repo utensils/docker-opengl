@@ -1,14 +1,12 @@
 ---
+version: 2.1
 jobs:
   build:
-    branches:
-      only:
-        - main
     machine:
       image: 'ubuntu-1604:202004-01'
     environment:
       DOCKER_CLI_EXPERIMENTAL: enabled
-      DOCKER_BUILDKIT: 1
+      DOCKER_BUILDKIT: "1"
       BUILD_PROGRESS: plain
     steps:
       - checkout
@@ -34,7 +32,5 @@ jobs:
           name: Build Docker Images
           command: |
             echo "$DOCKERHUB_PASS" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
-            LLVM_VERSION=8 BASE_IMAGE='alpine:3.10' make all
-            LLVM_VERSION=9 BASE_IMAGE='alpine:3.11' make all
-            LLVM_VERSION=10 BASE_IMAGE='alpine:3.12' make all
-            LLVM_VERSION=10 BASE_IMAGE='alpine:edge' make all
+            make all
+            make push-readme

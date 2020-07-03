@@ -54,12 +54,7 @@ ARG MESA_VERSION
 RUN set -xe; \
     mkdir -p /var/tmp/build; \
     cd /var/tmp/build/; \
-    if [ "$MESA_VERSION" == "latest" ]; \
-    then \
-        git clone --depth=1 --branch=master https://gitlab.freedesktop.org/mesa/mesa.git; \
-    else \
-        git clone --depth=1 --branch=mesa-${MESA_VERSION} https://gitlab.freedesktop.org/mesa/mesa.git; \
-    fi
+    git clone --depth=1 --branch=mesa-${MESA_VERSION} https://gitlab.freedesktop.org/mesa/mesa.git;
 
 # Build Mesa from source.
 ARG BUILD_TYPE=release

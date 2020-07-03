@@ -12,8 +12,9 @@ TAG_SUFFIX              ?= $(shell echo "-$(BASE_IMAGE)" | $(SED) 's|:|-|g' | $(
 VCS_REF                 := $(shell git rev-parse --short HEAD)
 BUILD_DATE              := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 PLATFORMS               ?= linux/amd64,linux/386,linux/arm64,linux/arm/v7
-RELEASES                ?= stable 20.0.6 20.1.0-rc1 latest
+RELEASES                ?= stable 20.0.6 20.1.1 20.1.2
 STABLE                  ?= 20.0.6
+LATEST                  ?= 20.1.2
 BUILD_PROGRESS          ?= auto
 BUILD_OUTPUT            ?= type=registry
 BUILD_TYPE              ?= release
@@ -42,6 +43,9 @@ $(RELEASES):
 	if [ "$(@)" == "stable" ]; \
 	then \
 		MESA_VERSION="$(STABLE)"; \
+	elif [ "$(@)" == "latest" ]; \
+	then \
+		MESA_VERSION="$(LATEST)"; \
 	else \
 		MESA_VERSION="$(@)"; \
 	fi; \
@@ -53,6 +57,7 @@ $(RELEASES):
 		--build-arg LLVM_VERSION=$(LLVM_VERSION) \
 		--build-arg MESA_VERSION="$$MESA_VERSION"  \
 		--build-arg VCS_REF=$(VCS_REF) \
+		--cache-from $(REPO_NAMESPACE)/$(IMAGE_NAME):$(@)$(TAG_SUFFIX) \
 		--tag $(REPO_NAMESPACE)/$(IMAGE_NAME):$(@)$(TAG_SUFFIX) \
 		--tag $(REPO_NAMESPACE)/$(IMAGE_NAME):$(@) \
 		--platform=$(PLATFORMS) \
