@@ -12,7 +12,7 @@ TAG_SUFFIX              ?= $(shell echo "-$(BASE_IMAGE)" | $(SED) 's|:|-|g' | $(
 VCS_REF                 := $(shell git rev-parse --short HEAD)
 BUILD_DATE              := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 PLATFORMS               ?= linux/amd64,linux/386,linux/arm64,linux/arm/v7
-RELEASES                ?= stable 20.0.6 20.1.1 20.1.2
+RELEASES                ?= latest stable 20.0.6 20.1.1 20.1.2
 STABLE                  ?= 20.0.6
 LATEST                  ?= 20.1.2
 BUILD_PROGRESS          ?= auto
@@ -25,14 +25,8 @@ MICRO_BADGER_URL        ?=
 .PHONY: default
 default: $(STABLE)
 
-.PHONY: latest
-latest: $(LATEST)
-
-.PHONY: stable
-stable: $(STABLE)
-
 .PHONY: all
-all: $(LATEST) $(STABLE) $(RELEASES)
+all: $(RELEASES)
 
 # Build base images for all releases using buildx.
 .PHONY: $(RELEASES)

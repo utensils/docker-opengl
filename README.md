@@ -18,14 +18,14 @@ Minimal Docker container bundled with the Mesa 3D Gallium Drivers: [LLVMpipe][me
 
 ## Docker Images
 
-| Image                    | Description             | Platforms                                      | Base Image  |
-| ------------------------ | ----------------------- | ---------------------------------------------- | ----------- |
-| `utensils/opengl:latest` | Latest/Dev Mesa version | linux/amd64,linux/386,linux/arm64,linux/arm/v7 | alpine:3.12 |
-| `utensils/opengl:stable` | Stable Mesa version     | linux/amd64,linux/386,linux/arm64,linux/arm/v7 | alpine:3.12 |
-| `utensils/opengl:20.0.6` | Mesa version **20.0.6** | linux/amd64,linux/386,linux/arm64,linux/arm/v7 | alpine:3.12 |
-| `utensils/opengl:19.0.8` | Mesa version **19.0.8** | linux/amd64                                    | alpine:3.10 |
-| `utensils/opengl:18.3.6` | Mesa version **18.3.6** | linux/amd64                                    | alpine:3.10 |
-| `utensils/opengl:18.2.8` | Mesa version **18.2.8** | linux/amd64                                    | alpine:3.10 |
+| Image                    | Description             | Architectures             | Base Image  |
+| ------------------------ | ----------------------- | ------------------------- | ----------- |
+| `utensils/opengl:latest` | Latest/Dev Mesa version | amd64, 386, arm64, arm/v7 | alpine:3.12 |
+| `utensils/opengl:stable` | Stable Mesa version     | amd64, 386, arm64, arm/v7 | alpine:3.12 |
+| `utensils/opengl:20.0.6` | Mesa version **20.0.6** | amd64, 386, arm64, arm/v7 | alpine:3.12 |
+| `utensils/opengl:19.0.8` | Mesa version **19.0.8** | amd64                     | alpine:3.10 |
+| `utensils/opengl:18.3.6` | Mesa version **18.3.6** | amd64                     | alpine:3.10 |
+| `utensils/opengl:18.2.8` | Mesa version **18.2.8** | amd64                     | alpine:3.10 |
 
 ## Building
 
