@@ -1,4 +1,4 @@
-# Docker - Mesa 3D OpenGL Software Rendering (Gallium) - LLVMpipe, and OpenSWR Drivers
+# Multi-Arch Docker - Mesa 3D OpenGL Software Rendering (Gallium) - LLVMpipe, and OpenSWR Drivers
 
 [![CircleCI](https://circleci.com/gh/utensils/docker-opengl.svg?style=svg)](https://circleci.com/gh/utensils/docker-opengl) [![Docker Automated build](https://img.shields.io/docker/automated/utensils/opengl.svg)](https://hub.docker.com/r/utensils/opengl/) [![Docker Pulls](https://img.shields.io/docker/pulls/utensils/opengl.svg)](https://hub.docker.com/r/utensils/opengl/) [![Docker Stars](https://img.shields.io/docker/stars/utensils/opengl.svg)](https://hub.docker.com/r/utensils/opengl/) [![](https://images.microbadger.com/badges/image/utensils/opengl.svg)](https://microbadger.com/images/utensils/opengl "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/utensils/opengl.svg)](https://microbadger.com/images/utensils/opengl "Get your own version badge on microbadger.com")
 
@@ -17,15 +17,16 @@ Minimal Docker container bundled with the Mesa 3D Gallium Drivers: [LLVMpipe][me
 - Xvfb - X Virtual Frame Buffer
 
 ## Docker Images
+Please note there are images available for Alpine versions 3.10, 3.11 as well. Please see all available tags on [DockerHub]
 
-| Image                    | Description             | Architectures             | Base Image  |
-| ------------------------ | ----------------------- | ------------------------- | ----------- |
-| `utensils/opengl:latest` | Latest/Dev Mesa version | amd64, 386, arm64, arm/v7 | alpine:3.12 |
-| `utensils/opengl:stable` | Stable Mesa version     | amd64, 386, arm64, arm/v7 | alpine:3.12 |
-| `utensils/opengl:20.0.6` | Mesa version **20.0.6** | amd64, 386, arm64, arm/v7 | alpine:3.12 |
-| `utensils/opengl:19.0.8` | Mesa version **19.0.8** | amd64                     | alpine:3.10 |
-| `utensils/opengl:18.3.6` | Mesa version **18.3.6** | amd64                     | alpine:3.10 |
-| `utensils/opengl:18.2.8` | Mesa version **18.2.8** | amd64                     | alpine:3.10 |
+| Image                    | Description                             | Architectures             | Base Image  |
+| ------------------------ | --------------------------------------- | ------------------------- | ----------- |
+| `utensils/opengl:latest` | Latest Mesa version                     | amd64, 386, arm64, arm/v7 | alpine:3.12 |
+| `utensils/opengl:stable` | Stable Mesa version (Personally Tested) | amd64, 386, arm64, arm/v7 | alpine:3.12 |
+| `utensils/opengl:20.0.6` | Mesa version **20.0.6**                 | amd64, 386, arm64, arm/v7 | alpine:3.12 |
+| `utensils/opengl:19.0.8` | Mesa version **19.0.8**                 | amd64                     | alpine:3.10 |
+| `utensils/opengl:18.3.6` | Mesa version **18.3.6**                 | amd64                     | alpine:3.10 |
+| `utensils/opengl:18.2.8` | Mesa version **18.2.8**                 | amd64                     | alpine:3.10 |
 
 ## Building
 
@@ -83,3 +84,4 @@ The following environment variables are present to modify rendering options.
 [openswr]: http://openswr.org/
 [mesa-llvm]: https://www.mesa3d.org/llvmpipe.html
 [Envisaged]: https://github.com/utensils/Envisaged
+[DckerHub]: https://hub.docker.com/repository/docker/utensils/opengl/tags?page=1
