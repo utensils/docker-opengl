@@ -84,4 +84,4 @@ The following environment variables are present to modify rendering options.
 [openswr]: http://openswr.org/
 [mesa-llvm]: https://www.mesa3d.org/llvmpipe.html
 [Envisaged]: https://github.com/utensils/Envisaged
-[DckerHub]: https://hub.docker.com/repository/docker/utensils/opengl/tags?page=1
+[DockerHub]: https://hub.docker.com/repository/docker/utensils/opengl/tags?page=1
